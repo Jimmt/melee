@@ -1,0 +1,49 @@
+[gd_scene load_steps=7 format=3 uid="uid://dkxgx0ixdku0y"]
+
+[ext_resource type="Environment" uid="uid://cxcp6r7xgfbvv" path="res://environment.tres" id="1_ulcgi"]
+[ext_resource type="Script" uid="uid://d2b3k0fc1e2qc" path="res://player.gd" id="2_nxogm"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_nxogm"]
+size = Vector2(10, 10)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_nxogm"]
+margin = 0.0
+size = Vector3(10, 0.1, 10)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ulcgi"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3253y"]
+
+[node name="Scene" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = ExtResource("1_ulcgi")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.9467898, 0.3218526, 0, -0.3218526, 0.9467898, 0, 9.775558, 9.032563)
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_nxogm")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Ground"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Ground/StaticBody3D"]
+transform = Transform3D(0.99999976, 0, 0, 0, 1, 0, 0, 0, 0.99999976, 0, 0, 0)
+shape = SubResource("BoxShape3D_nxogm")
+
+[node name="Player" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.598702, 0)
+script = ExtResource("2_nxogm")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_ulcgi")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_3253y")
+
+[node name="Head" type="Node3D" parent="Player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.36115885, 0)
+
+[node name="Camera3D" type="Camera3D" parent="Player/Head"]
