@@ -3,27 +3,42 @@ extends CharacterBody3D
 
 @export var speed = 5.0
 @export var jump_velocity = 4.5
-@export var mouse_sens = 0.01
+@export var mouse_sens = 0.00075
 
 var input_accumulator = Vector2.ZERO
+var head: Node3D
+var camera: Camera3D
+var debugDraw3DScopeConfig: DebugDraw3DScopeConfig
 
 func _ready():
 	# TODO: move this somewhere else...
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+	head = get_node("Head")
+	camera = head.get_node("Camera3D")
+	debugDraw3DScopeConfig = DebugDraw3D.new_scoped_config().set_no_depth_test(true)
+
 	
 func _input(event):
-	if event is InputEventMouseMotion:
-		print(event.relative)
+	if event is InputEventMouseMotion and Input.mouse_mode == Input.MOUSE_MODE_CAPTURED:
 		input_accumulator += event.relative
 
-func _physics_process(delta: float) -> void:
-	move(delta)
-	
+func _physics_process(delta: float) -> void:	
 	if Input.is_action_just_pressed("primary_attack"):
 		print("attack")
 		
-	rotation.y -= input_accumulator.x * mouse_sens 
+	if Input.is_action_just_pressed("ui_cancel"):
+		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED if Input.mouse_mode == Input.MOUSE_MODE_VISIBLE else Input.MOUSE_MODE_VISIBLE
+	
+	rotation.y -= input_accumulator.x * mouse_sens
+	head.rotation.x -= input_accumulator.y * mouse_sens
 	input_accumulator = Vector2.ZERO
+	
+	move(delta)
+	
+	var _s = DebugDraw3D.new_scoped_config().set_no_depth_test(true)
+	DebugDraw3D.draw_gizmo(transform)
+	DebugDraw3D.draw_gizmo(camera.global_transform)
+#	DebugDraw3D.draw_ray(position + Vector3.UP * 0.1, -camera.global_basis.z, 5)
 	
 func move(delta: float):
 	if not is_on_floor():
@@ -33,7 +48,7 @@ func move(delta: float):
 		velocity.y = jump_velocity
 
 	var input_dir := Input.get_vector("move_left", "move_right", "move_forward", "move_back")
-	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	var direction := (camera.global_basis.x * input_dir.x + camera.global_basis.z * input_dir.y).normalized()
 	if direction:
 		velocity.x = direction.x * speed
 		velocity.z = direction.z * speed
