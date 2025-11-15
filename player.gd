@@ -31,13 +31,11 @@ func _physics_process(delta: float) -> void:
 	
 	rotation.y -= input_accumulator.x * mouse_sens
 	head.rotation.x -= input_accumulator.y * mouse_sens
+	head.rotation.x = deg_to_rad(clampf(rad_to_deg(head.rotation.x), -70, 89))
 	input_accumulator = Vector2.ZERO
 	
 	move(delta)
 	
-	var _s = DebugDraw3D.new_scoped_config().set_no_depth_test(true)
-	DebugDraw3D.draw_gizmo(transform)
-	DebugDraw3D.draw_gizmo(camera.global_transform)
 #	DebugDraw3D.draw_ray(position + Vector3.UP * 0.1, -camera.global_basis.z, 5)
 	
 func move(delta: float):

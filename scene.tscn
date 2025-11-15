@@ -1,7 +1,8 @@
-[gd_scene load_steps=7 format=3 uid="uid://dkxgx0ixdku0y"]
+[gd_scene load_steps=9 format=3 uid="uid://dkxgx0ixdku0y"]
 
 [ext_resource type="Environment" uid="uid://cxcp6r7xgfbvv" path="res://environment.tres" id="1_ulcgi"]
 [ext_resource type="Script" uid="uid://d2b3k0fc1e2qc" path="res://player.gd" id="2_nxogm"]
+[ext_resource type="PackedScene" uid="uid://3kwoevl0ok72" path="res://models/sword.glb" id="3_3253y"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_nxogm"]
 size = Vector2(10, 10)
@@ -11,6 +12,10 @@ margin = 0.0
 size = Vector3(10, 0.1, 10)
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_ulcgi"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u3cyc"]
+transparency = 1
+albedo_color = Color(1, 1, 1, 0.5)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3253y"]
 
@@ -32,21 +37,25 @@ transform = Transform3D(0.99999976, 0, 0, 0, 1, 0, 0, 0, 0.99999976, 0, 0, 0)
 shape = SubResource("BoxShape3D_nxogm")
 
 [node name="Player" type="CharacterBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.598702, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0929046, 0)
 script = ExtResource("2_nxogm")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 mesh = SubResource("CapsuleMesh_ulcgi")
+surface_material_override/0 = SubResource("StandardMaterial3D_u3cyc")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_3253y")
 
 [node name="Head" type="Node3D" parent="Player"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.36115885, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5423541, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Player/Head"]
+
+[node name="sword" parent="Player/Head" instance=ExtResource("3_3253y")]
+transform = Transform3D(0.30765557, 0, -0.95149785, 0, 1, 0, 0.95149785, 0, 0.30765557, 0.55925405, -0.35713887, -0.6439872)
 
 [node name="Boxes" type="Node3D" parent="."]
 
