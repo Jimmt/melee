@@ -25,7 +25,7 @@ albedo_color = Color(1, 1, 1, 0.5)
 environment = ExtResource("1_ulcgi")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.9467898, 0.3218526, 0, -0.3218526, 0.9467898, 0, 9.775558, 9.032563)
+transform = Transform3D(1, 0, 0, 0, 0.49999997, 0.86602545, 0, -0.86602545, 0.49999997, 0, 10, 10)
 
 [node name="Ground" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_nxogm")
