@@ -13,7 +13,7 @@ var debugDraw3DScopeConfig: DebugDraw3DScopeConfig
 func _ready():
 	# TODO: move this somewhere else...
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
-	head = get_node("Head")
+	head = $Head
 	camera = head.get_node("Camera3D")
 	debugDraw3DScopeConfig = DebugDraw3D.new_scoped_config().set_no_depth_test(true)
 
@@ -24,7 +24,7 @@ func _input(event):
 
 func _physics_process(delta: float) -> void:	
 	if Input.is_action_just_pressed("primary_attack"):
-		print("attack")
+		$Head/sword/AnimationPlayer.play("Attack")
 		
 	if Input.is_action_just_pressed("ui_cancel"):
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED if Input.mouse_mode == Input.MOUSE_MODE_VISIBLE else Input.MOUSE_MODE_VISIBLE

@@ -55,7 +55,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5423541, 0)
 [node name="Camera3D" type="Camera3D" parent="Player/Head"]
 
 [node name="sword" parent="Player/Head" instance=ExtResource("3_3253y")]
-transform = Transform3D(0.30765557, 0, -0.95149785, 0, 1, 0, 0.95149785, 0, 0.30765557, 0.55925405, -0.35713887, -0.6439872)
+transform = Transform3D(0.97273546, 0, -0.23191771, 0, 1, 0, 0.23191771, 0, 0.97273546, 0.55925405, -0.35713887, -0.6439872)
 
 [node name="Boxes" type="Node3D" parent="."]
 

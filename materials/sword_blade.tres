@@ -6,6 +6,4 @@
 resource_name = "sword_blade"
 cull_mode = 2
 albedo_texture = ExtResource("1_t2bti")
-metallic = 0.5
-metallic_specular = 0.4
 roughness = 0.5
