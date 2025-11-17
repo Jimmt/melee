@@ -1,8 +1,10 @@
-[gd_scene load_steps=9 format=3 uid="uid://dkxgx0ixdku0y"]
+[gd_scene load_steps=12 format=3 uid="uid://dkxgx0ixdku0y"]
 
 [ext_resource type="Environment" uid="uid://cxcp6r7xgfbvv" path="res://environment.tres" id="1_ulcgi"]
 [ext_resource type="Script" uid="uid://d2b3k0fc1e2qc" path="res://player.gd" id="2_nxogm"]
 [ext_resource type="PackedScene" uid="uid://3kwoevl0ok72" path="res://models/sword.glb" id="3_3253y"]
+[ext_resource type="Script" uid="uid://co8mqqmtb5puy" path="res://enemy.gd" id="4_m7jmp"]
+[ext_resource type="PackedScene" uid="uid://cpbxj5mrh0syc" path="res://models/enemy_capsule.glb" id="4_u3cyc"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_nxogm"]
 size = Vector2(10, 10)
@@ -18,6 +20,8 @@ transparency = 1
 albedo_color = Color(1, 1, 1, 0.5)
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_3253y"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_u3cyc"]
 
 [node name="Scene" type="Node3D"]
 
@@ -42,6 +46,7 @@ script = ExtResource("2_nxogm")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+visible = false
 mesh = SubResource("CapsuleMesh_ulcgi")
 surface_material_override/0 = SubResource("StandardMaterial3D_u3cyc")
 
@@ -106,3 +111,17 @@ use_collision = true
 [node name="CSGBox3D7" type="CSGBox3D" parent="Boxes"]
 transform = Transform3D(0.0015184437, 0, 0.99999887, 0, 1, 0, -0.99999887, 0, 0.0015184437, -3.7530437, 0, 4.6465664)
 use_collision = true
+
+[node name="Enemy" type="CharacterBody3D" parent="." node_paths=PackedStringArray("player")]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.818, 0, -3)
+script = ExtResource("4_m7jmp")
+player = NodePath("../Player")
+
+[node name="EnemyCapsule" parent="Enemy" instance=ExtResource("4_u3cyc")]
+
+[node name="sword" parent="Enemy" instance=ExtResource("3_3253y")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.44548142, 0.89137125, -0.3662169)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_u3cyc")

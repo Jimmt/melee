@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://fgdnw5anwfl6"]
+
+[ext_resource type="Texture2D" uid="uid://duebjukq2pm3a" path="res://models/enemy_capsule_enemy_capsule_tex.png" id="1_uft1g"]
+
+[resource]
+resource_name = "EnemyCapsuleMat"
+cull_mode = 2
+albedo_texture = ExtResource("1_uft1g")
+metallic_specular = 0.0
+roughness = 0.0
