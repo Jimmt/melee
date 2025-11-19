@@ -1,42 +1,73 @@
 extends CharacterBody3D
 
 @export var speed = 1.0
-@export var rotationDegPerSecond = 60
+@export var rotationDegPerSecond = 100
 @export var player: Node3D # TODO refactor
+@export var min_distance = 1.55
+@export var push_back_dist = 0.4
+@onready var animation_player: AnimationPlayer = $sword/AnimationPlayer
+var lock_move = false
 
-#func _ready() -> void:
-#	look_at(player.global_position)
+enum State {
+	IDLE, ATTACKING, BLOCKING 
+}
+var state = State.IDLE
+var last_attack_finish_time = 0
+
+func _ready():
+	animation_player.animation_finished.connect(on_anim_finished)
+
+func on_anim_finished(name):
+	if name == "Attack":
+		last_attack_finish_time = Time.get_ticks_msec()
+	state = State.IDLE
 
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
+		
+	if lock_move:
+		return
 
-	var direction = player.global_position - global_position
-	var target_angle_y = atan2(direction.x, direction.z)
-	print(rad_to_deg(target_angle_y))
-	var max_step_rad = deg_to_rad(rotationDegPerSecond) * delta
-	# 2. Get the current and target Y rotation (in radians)
-	var current_rot_y: float = rotation.y
-	var angle_diff: float = wrapf(target_angle_y - current_rot_y, -PI, PI)
+	var direction: Vector3 = player.global_position - global_position
+	var current_forward: Vector3 = -transform.basis.z.normalized()
+	var angle_diff: float = current_forward.signed_angle_to(direction, Vector3.UP)
 	
-	# Calculate the fraction of the total difference that max_step represents
-	var weight: float
+	var max_step_rad: float = deg_to_rad(rotationDegPerSecond) * delta
+	
+	var rotation_amount: float
 	if abs(angle_diff) < max_step_rad:
-		# If the remaining difference is smaller than the max step, move the full difference
-		weight = 1.0
+		rotation_amount = angle_diff
 	else:
-		# Otherwise, move by the max_step in the correct direction
-		weight = max_step_rad / abs(angle_diff)
+		rotation_amount = sign(angle_diff) * max_step_rad
 	
-	# 4. Apply the rotation
-	# lerp_angle ensures the shortest path is taken and uses the calculated weight
-	rotation.y = lerp_angle(current_rot_y, target_angle_y, weight)
+	rotation.y += rotation_amount
 	
-	if direction:
+	if direction.length() > min_distance:
 		velocity.x = direction.x * speed
 		velocity.z = direction.z * speed
 	else:
+		attack()
 		velocity.x = move_toward(velocity.x, 0, speed)
 		velocity.z = move_toward(velocity.z, 0, speed)
 
 	move_and_slide()
+	
+func attack():
+	var time_since_last_attack_finish = Time.get_ticks_msec() - last_attack_finish_time
+	if state == State.ATTACKING || time_since_last_attack_finish < 500:
+		return
+	state = State.ATTACKING
+	animation_player.play("Attack")
+	
+func take_hit(position: Vector3, direction: Vector3):
+	lock_move = true
+	
+	var push_back = direction * push_back_dist
+	push_back.y = 0
+	var tween = get_tree().create_tween()
+	tween.tween_property(self, "global_position", global_position + push_back, 0.1).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	tween.tween_callback(func():
+		await get_tree().create_timer(0.5).timeout
+		lock_move = false
+	)

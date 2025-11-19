@@ -2,9 +2,9 @@
 
 [ext_resource type="Environment" uid="uid://cxcp6r7xgfbvv" path="res://environment.tres" id="1_ulcgi"]
 [ext_resource type="Script" uid="uid://d2b3k0fc1e2qc" path="res://player.gd" id="2_nxogm"]
-[ext_resource type="PackedScene" uid="uid://3kwoevl0ok72" path="res://models/sword.glb" id="3_3253y"]
+[ext_resource type="PackedScene" uid="uid://bdees4st7rogb" path="res://sword.tscn" id="3_y2354"]
 [ext_resource type="Script" uid="uid://co8mqqmtb5puy" path="res://enemy.gd" id="4_m7jmp"]
-[ext_resource type="PackedScene" uid="uid://cpbxj5mrh0syc" path="res://models/enemy_capsule.glb" id="4_u3cyc"]
+[ext_resource type="PackedScene" uid="uid://37t22ao537b0" path="res://models/enemy_capsule.tscn" id="5_y2354"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_nxogm"]
 size = Vector2(10, 10)
@@ -59,8 +59,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5423541, 0)
 
 [node name="Camera3D" type="Camera3D" parent="Player/Head"]
 
-[node name="sword" parent="Player/Head" instance=ExtResource("3_3253y")]
-transform = Transform3D(0.97273546, 0, -0.23191771, 0, 1, 0, 0.23191771, 0, 0.97273546, 0.55925405, -0.35713887, -0.6439872)
+[node name="sword" parent="Player/Head" instance=ExtResource("3_y2354")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.559, -0.35, -0.64)
 
 [node name="Boxes" type="Node3D" parent="."]
 
@@ -117,10 +117,10 @@ transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0.81
 script = ExtResource("4_m7jmp")
 player = NodePath("../Player")
 
-[node name="EnemyCapsule" parent="Enemy" instance=ExtResource("4_u3cyc")]
+[node name="EnemyCapsule" parent="Enemy" instance=ExtResource("5_y2354")]
 
-[node name="sword" parent="Enemy" instance=ExtResource("3_3253y")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.44548142, 0.89137125, -0.3662169)
+[node name="sword" parent="Enemy" instance=ExtResource("3_y2354")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.445, 0.891, -0.366)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)

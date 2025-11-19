@@ -1,0 +1,18 @@
+[gd_scene load_steps=2 format=3 uid="uid://bdees4st7rogb"]
+
+[ext_resource type="PackedScene" uid="uid://3kwoevl0ok72" path="res://models/sword.glb" id="1_74bdg"]
+
+[node name="sword" instance=ExtResource("1_74bdg")]
+
+[node name="BoneMarker" type="BoneAttachment3D" parent="." index="0"]
+transform = Transform3D(0.17141727, 0, -0.18087888, 0, 0.24920082, 0, 0.18087888, 0, 0.17141727, 0, 0, 0)
+bone_name = "Bone"
+bone_idx = 0
+use_external_skeleton = true
+external_skeleton = NodePath("../Armature/Skeleton3D")
+
+[node name="OffsetMarker" type="Node3D" parent="BoneMarker" index="0"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.9632897, 0)
+
+[node name="Skeleton3D" parent="Armature" index="0"]
+bones/0/rotation = Quaternion(0, -0.39505193, 0, 0.91865885)

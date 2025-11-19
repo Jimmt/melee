@@ -1,0 +1,5 @@
+[gd_scene load_steps=2 format=3 uid="uid://37t22ao537b0"]
+
+[ext_resource type="PackedScene" uid="uid://cpbxj5mrh0syc" path="res://models/enemy_capsule.glb" id="1_sflxb"]
+
+[node name="enemy_capsule" instance=ExtResource("1_sflxb")]
