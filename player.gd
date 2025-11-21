@@ -4,6 +4,7 @@ extends CharacterBody3D
 @export var jump_velocity = 4.5
 @export var mouse_sens = 0.0005
 @export var raycast_length = 2
+@export var incoming_attack_manager: Node3D
 
 var input_accumulator = Vector2.ZERO
 var head: Node3D
@@ -43,8 +44,7 @@ func _physics_process(delta: float) -> void:
 		animation_player.play("Attack")
 		
 	if Input.is_action_just_pressed("block"):
-		state = State.BLOCKING
-		#animation_player.play("...")
+		handle_block()
 		
 	if Input.is_action_just_pressed("ui_cancel"):
 		Input.mouse_mode = Input.MOUSE_MODE_CAPTURED if Input.mouse_mode == Input.MOUSE_MODE_VISIBLE else Input.MOUSE_MODE_VISIBLE
@@ -57,6 +57,11 @@ func _physics_process(delta: float) -> void:
 	move(delta)
 	check_attack_raycast()
 		
+func handle_block():
+	state = State.BLOCKING
+	animation_player.play("Block")
+	incoming_attack_manager.check_block()
+
 # TODO: shapecast?
 func check_attack_raycast():
 	if state != State.ATTACKING:

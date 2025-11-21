@@ -14,12 +14,17 @@ enum State {
 var state = State.IDLE
 var last_attack_finish_time = 0
 
+signal attack_start(attack_id: int, sword_pos: Vector3)
+signal attack_pos(attack_id: int, sword_pos: Vector3)
+signal attack_end(attack_id: int)
+
 func _ready():
 	animation_player.animation_finished.connect(on_anim_finished)
 
 func on_anim_finished(name):
 	if name == "Attack":
 		last_attack_finish_time = Time.get_ticks_msec()
+		emit_signal("attack_end", 0)
 	state = State.IDLE
 
 func _physics_process(delta: float) -> void:
@@ -53,12 +58,19 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 	
+	if state == State.ATTACKING:
+		emit_signal("attack_pos", 0, sword_indicator_pos())
+	
 func attack():
 	var time_since_last_attack_finish = Time.get_ticks_msec() - last_attack_finish_time
 	if state == State.ATTACKING || time_since_last_attack_finish < 500:
 		return
 	state = State.ATTACKING
-	animation_player.play("Attack")
+	animation_player.play("Attack", -1, 0.5)
+	emit_signal("attack_start", 0, sword_indicator_pos())
+	
+func sword_indicator_pos() -> Vector3:
+	return ($sword/BoneMarker.global_position + $sword/BoneMarker/OffsetMarker.global_position) / 2
 	
 func take_hit(position: Vector3, direction: Vector3):
 	lock_move = true
@@ -71,3 +83,8 @@ func take_hit(position: Vector3, direction: Vector3):
 		await get_tree().create_timer(0.5).timeout
 		lock_move = false
 	)
+
+func _on_incoming_attack_manager_enemy_attack_blocked() -> void:
+	animation_player.stop(true)
+	animation_player.seek(0, true) #  need an idle animation...
+	on_anim_finished("Attack")

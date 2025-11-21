@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://7kknhv8oy7qr"]
+
+[ext_resource type="Material" uid="uid://dtq4ku5g3uito" path="res://shaders/incoming_attack_material.tres" id="1_dqmrs"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_xlvrw"]
+size = Vector2(0.5, 0.5)
+
+[node name="IncomingAttackIndicator" type="MeshInstance3D"]
+material_override = ExtResource("1_dqmrs")
+mesh = SubResource("QuadMesh_xlvrw")

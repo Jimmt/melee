@@ -1,10 +1,12 @@
-[gd_scene load_steps=12 format=3 uid="uid://dkxgx0ixdku0y"]
+[gd_scene load_steps=14 format=3 uid="uid://dkxgx0ixdku0y"]
 
 [ext_resource type="Environment" uid="uid://cxcp6r7xgfbvv" path="res://environment.tres" id="1_ulcgi"]
 [ext_resource type="Script" uid="uid://d2b3k0fc1e2qc" path="res://player.gd" id="2_nxogm"]
 [ext_resource type="PackedScene" uid="uid://bdees4st7rogb" path="res://sword.tscn" id="3_y2354"]
 [ext_resource type="Script" uid="uid://co8mqqmtb5puy" path="res://enemy.gd" id="4_m7jmp"]
 [ext_resource type="PackedScene" uid="uid://37t22ao537b0" path="res://models/enemy_capsule.tscn" id="5_y2354"]
+[ext_resource type="Script" uid="uid://bw420rldl6tdu" path="res://incoming_attack_manager.gd" id="7_ni31j"]
+[ext_resource type="Script" uid="uid://butnvd7gqhb1q" path="res://ui.gd" id="7_xlvrw"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_nxogm"]
 size = Vector2(10, 10)
@@ -40,9 +42,10 @@ mesh = SubResource("PlaneMesh_nxogm")
 transform = Transform3D(0.99999976, 0, 0, 0, 1, 0, 0, 0, 0.99999976, 0, 0, 0)
 shape = SubResource("BoxShape3D_nxogm")
 
-[node name="Player" type="CharacterBody3D" parent="."]
+[node name="Player" type="CharacterBody3D" parent="." node_paths=PackedStringArray("incoming_attack_manager")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.0929046, 0)
 script = ExtResource("2_nxogm")
+incoming_attack_manager = NodePath("../IncomingAttackManager")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
@@ -125,3 +128,21 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.445, 0.891, -0.366)
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Enemy"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 shape = SubResource("CapsuleShape3D_u3cyc")
+
+[node name="IncomingAttackManager" type="Node3D" parent="." node_paths=PackedStringArray("control_node")]
+script = ExtResource("7_ni31j")
+control_node = NodePath("../CanvasLayer/Control")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Control" type="Control" parent="CanvasLayer"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("7_xlvrw")
+
+[connection signal="attack_end" from="Enemy" to="IncomingAttackManager" method="_on_enemy_attack_end"]
+[connection signal="attack_pos" from="Enemy" to="IncomingAttackManager" method="_on_enemy_attack_pos"]
+[connection signal="attack_start" from="Enemy" to="IncomingAttackManager" method="_on_enemy_attack_start"]
+[connection signal="enemy_attack_blocked" from="IncomingAttackManager" to="Enemy" method="_on_incoming_attack_manager_enemy_attack_blocked"]
